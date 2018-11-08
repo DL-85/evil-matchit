@@ -261,8 +261,22 @@ If IS-FORWARD is t, jump forward; or else jump backward."
 (defun evilmi--push-mark (rlt)
     (push-mark (nth 0 rlt) t t))
 
+(defun evil-load-plugin-rules(modes rules)
+  "Load MODES's plugin RULES."
+  (cond
+   ((stringp modes)
+    (message "modes=%s %s" modes (stringp modes))
+    (let* ((major-mode-name (concat "evil-matchit-" modes))
+           (get-tag (internal (concat major-mode-name "-get-tag")))
+           (jump (internal (concat major-mode-name "-jump"))))
+      (autoload get-tag major-mode-name nil)
+      (autoload jump major-mode-name nil)))
+   ((listp modes)
+    (message "modes=%s %s" modes (listp modes))
+    )))
+
 (defun evilmi-init-plugins ()
-  "Load Matrix."
+  "Load plugins."
   (interactive)
   ;; simple matching for languages containing "{(["
   (autoload 'evilmi-simple-get-tag "evil-matchit-simple" nil)
